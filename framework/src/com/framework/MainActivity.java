@@ -1,5 +1,7 @@
 package com.framework;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +12,16 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
+import com.framework.bean.WeatherInfo;
 import com.framework.common.Config;
+import com.framework.dao.Weather;
+import com.framework.db.DBHelper;
 import com.framework.model.WeatherData;
 import com.framework.network.GsonRequest;
 
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
+    private static final boolean TEST_DB = false;
 
     private Button mGetWeatherSKBtn;
     private TextView mWeatherSKInfo;
@@ -34,7 +40,14 @@ public class MainActivity extends Activity {
                 mGetWeatherSKBtn.setEnabled(false);
                 mGetWeatherSKBtn.setText(R.string.weather_sk_getting_tip);
                 getWeatherInfo();
-
+                if (TEST_DB) {
+                    List<Weather> weathers = getWeatherFromDB();
+                    if (weathers != null && weathers.size() > 0) {
+                        Log.d(TAG, "weather on db size: " + weathers.size() + " city:" + weathers.get(0).getCity()); 
+                    } else {
+                        Log.d(TAG, "weather on db is empty"); 
+                    }
+                }
             }
         });
     }
@@ -44,7 +57,7 @@ public class MainActivity extends Activity {
                 WeatherData.class, null, new Listener<WeatherData>() {
                     @Override
                     public void onResponse(WeatherData weatherData) {
-                        Log.e(TAG, "response : " + weatherData == null ? "empty" : weatherData.toString());
+                        Log.d(TAG, "response : " + weatherData == null ? "empty" : weatherData.toString());
                         onHandlResponse(weatherData);
                     }
                 }, new Response.ErrorListener() {
@@ -67,6 +80,9 @@ public class MainActivity extends Activity {
             } else {
                 mWeatherSKInfo.setText(String.format(this.getString(R.string.weather_sk_info_format), weatherData
                         .getWeatherinfo().getTemp(), weatherData.getWeatherinfo().getTime()));
+                if (TEST_DB) {
+                    saveWeatherInfo(weatherData.getWeatherinfo());
+                }
             }
         }
     }
@@ -77,5 +93,15 @@ public class MainActivity extends Activity {
             mGetWeatherSKBtn.setText(R.string.weather_sk_tip);
             mWeatherSKInfo.setText(String.format(this.getString(R.string.weather_sk_getting_error_tip), message));
         }
+    }
+
+    private void saveWeatherInfo(WeatherInfo weatherInfo) {
+        Weather weather = new Weather(System.currentTimeMillis(), weatherInfo.getCityid(), weatherInfo.getCity(),
+                weatherInfo.getTemp());
+        DBHelper.getInstance(getApplicationContext()).addWeather(weather);
+    }
+    
+    private List<Weather> getWeatherFromDB() {
+        return DBHelper.getInstance(getApplicationContext()).getWeather();
     }
 }
