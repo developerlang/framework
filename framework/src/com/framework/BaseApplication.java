@@ -26,6 +26,7 @@ public class BaseApplication extends Application {
         super.onCreate();
 
         sInstance = this;
+        Thread.setDefaultUncaughtExceptionHandler(new BaseUncaughtExceptionHandler(this.getApplicationContext()));
     }
 
     public static synchronized BaseApplication getInstance() {
