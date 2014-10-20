@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.Response.Listener;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
 import com.framework.common.Config;
 import com.framework.model.WeatherData;
 import com.framework.network.GsonRequest;
@@ -19,13 +17,11 @@ import com.framework.network.GsonRequest;
 public class MainActivity extends Activity {
     private static final String TAG = "MainActivity";
 
-    private RequestQueue mRequestQueue;
     private Button mGetWeatherSKBtn;
     private TextView mWeatherSKInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mRequestQueue = Volley.newRequestQueue(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mGetWeatherSKBtn = (Button) this.findViewById(R.id.weather_sk_get_btn);
@@ -59,7 +55,7 @@ public class MainActivity extends Activity {
                         onHandleResponseError(err);
                     }
                 });
-        mRequestQueue.add(getWeatherInfoRequest);
+        BaseApplication.getInstance().addToRequestQueue(getWeatherInfoRequest);
     }
 
     private void onHandlResponse(WeatherData weatherData) {
