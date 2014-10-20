@@ -3,3 +3,4 @@
 /framework/project.properties
 *.class
 /bin/
+/framework/.settings/
