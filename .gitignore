@@ -1,0 +1,5 @@
+
+/framework/.classpath
+/framework/project.properties
+*.class
+/bin/
