@@ -9,6 +9,7 @@ import android.widget.Toast;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.framework.log.MyLogger;
 import com.framework.network.RequestManager;
 import com.framework.network.VolleyErrorHelper;
 
@@ -19,6 +20,7 @@ import com.framework.network.VolleyErrorHelper;
  */
 public class BaseActivity extends FragmentActivity {
     protected Activity activity;
+    protected MyLogger hlog = MyLogger.hLog();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

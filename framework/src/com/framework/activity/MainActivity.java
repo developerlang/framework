@@ -12,15 +12,12 @@ import com.framework.bean.WeatherInfo;
 import com.framework.common.Config;
 import com.framework.dao.Weather;
 import com.framework.db.DBHelper;
-import com.framework.log.MyLogger;
 import com.framework.model.WeatherData;
 import com.framework.network.GsonRequest;
 
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
-    
-    private MyLogger hlog = MyLogger.hLog();
     
     private static final String TAG = "MainActivity";
     private static final boolean TEST_DB = false;
