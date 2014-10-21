@@ -1,7 +1,6 @@
 package com.framework.activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,12 +12,16 @@ import com.framework.bean.WeatherInfo;
 import com.framework.common.Config;
 import com.framework.dao.Weather;
 import com.framework.db.DBHelper;
+import com.framework.log.MyLogger;
 import com.framework.model.WeatherData;
 import com.framework.network.GsonRequest;
 
 import java.util.List;
 
 public class MainActivity extends BaseActivity {
+    
+    private MyLogger hlog = MyLogger.hLog();
+    
     private static final String TAG = "MainActivity";
     private static final boolean TEST_DB = false;
 
@@ -42,9 +45,11 @@ public class MainActivity extends BaseActivity {
                 if (TEST_DB) {
                     List<Weather> weathers = getWeatherFromDB();
                     if (weathers != null && weathers.size() > 0) {
-                        Log.d(TAG, "weather on db size: " + weathers.size() + " city:" + weathers.get(0).getCity()); 
+                        hlog.d("weather on db size: " + weathers.size() + " city:" + weathers.get(0).getCity());
+//                        Log.d(TAG, "weather on db size: " + weathers.size() + " city:" + weathers.get(0).getCity()); 
                     } else {
-                        Log.d(TAG, "weather on db is empty"); 
+                        hlog.d("weather on db is empty");
+//                        Log.d(TAG, "weather on db is empty"); 
                     }
                 }
             }
@@ -56,7 +61,8 @@ public class MainActivity extends BaseActivity {
                 WeatherData.class, null, new Listener<WeatherData>() {
                     @Override
                     public void onResponse(WeatherData weatherData) {
-                        Log.d(TAG, "response : " + weatherData == null ? "empty" : weatherData.toString());
+                        hlog.d("response : " + weatherData == null ? "empty" : weatherData.toString());
+//                        Log.d(TAG, "response : " + weatherData == null ? "empty" : weatherData.toString());
                         onHandlResponse(weatherData);
                     }
                 }, errorListener());
