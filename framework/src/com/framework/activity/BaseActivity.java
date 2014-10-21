@@ -10,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.framework.network.RequestManager;
+import com.framework.network.VolleyErrorHelper;
 
 /**
  * 基类
@@ -50,7 +51,7 @@ public class BaseActivity extends FragmentActivity {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity, error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(activity, VolleyErrorHelper.getMessage(error, activity), Toast.LENGTH_LONG).show();
             }
         };
     }
