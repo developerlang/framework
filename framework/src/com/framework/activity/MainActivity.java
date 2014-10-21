@@ -1,17 +1,14 @@
-package com.framework;
+package com.framework.activity;
 
-import java.util.List;
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.android.volley.Response;
+import com.android.volley.Request.Method;
 import com.android.volley.Response.Listener;
-import com.android.volley.VolleyError;
+import com.framework.R;
 import com.framework.bean.WeatherInfo;
 import com.framework.common.Config;
 import com.framework.dao.Weather;
@@ -19,7 +16,9 @@ import com.framework.db.DBHelper;
 import com.framework.model.WeatherData;
 import com.framework.network.GsonRequest;
 
-public class MainActivity extends Activity {
+import java.util.List;
+
+public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     private static final boolean TEST_DB = false;
 
@@ -53,22 +52,15 @@ public class MainActivity extends Activity {
     }
 
     private void getWeatherInfo() {
-        GsonRequest<WeatherData> getWeatherInfoRequest = new GsonRequest<WeatherData>(Config.WEATHER_SK_API,
+        GsonRequest<WeatherData> getWeatherInfoRequest = new GsonRequest<WeatherData>(Method.GET, Config.WEATHER_SK_API,
                 WeatherData.class, null, new Listener<WeatherData>() {
                     @Override
                     public void onResponse(WeatherData weatherData) {
                         Log.d(TAG, "response : " + weatherData == null ? "empty" : weatherData.toString());
                         onHandlResponse(weatherData);
                     }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        String err = error.getMessage();
-                        Log.e(TAG, "err : " + err);
-                        onHandleResponseError(err);
-                    }
-                });
-        BaseApplication.getInstance().addToRequestQueue(getWeatherInfoRequest);
+                }, errorListener());
+        executeRequest(getWeatherInfoRequest);
     }
 
     private void onHandlResponse(WeatherData weatherData) {
